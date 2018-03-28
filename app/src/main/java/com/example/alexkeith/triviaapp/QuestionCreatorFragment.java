@@ -6,11 +6,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alexkeith.triviaapp.R;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +32,17 @@ public class QuestionCreatorFragment extends Fragment {
         return fragment;
     }
 
+    @BindView(R.id.question_edittext)
+    protected EditText questionInput;
+    @BindView(R.id.correct_edittext)
+    protected EditText correctAnswer;
+    @BindView(R.id.wrong_answer_1_edittext)
+    protected EditText firstWrongAnswer;
+    @BindView(R.id.wrong_answer_2_edittext)
+    protected EditText secondWrongAnswer;
+    @BindView(R.id.wrong_answer_3_edittext)
+    protected EditText thirdWrongAnswer;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,5 +52,28 @@ public class QuestionCreatorFragment extends Fragment {
         return view;
     }
 
+    @OnClick(R.id.save_button)
+    protected void saveClicked() {
+        String questionTitle = questionInput.getText().toString();
+        String correct = correctAnswer.getText().toString();
+        String firstWrong = firstWrongAnswer.getText().toString();
+        String secondWrong = secondWrongAnswer.getText().toString();
+        String thirdWrong = thirdWrongAnswer.getText().toString();
+        Question question = new Question(questionTitle, correct, firstWrong, secondWrong, thirdWrong);
+        if (questionInput.getText().toString().isEmpty() || correctAnswer.getText().toString().isEmpty() || firstWrongAnswer.getText().toString().isEmpty() || secondWrongAnswer.getText().toString().isEmpty() || thirdWrongAnswer.getText().toString().isEmpty()) {
+        Toast.makeText(getActivity(), "Please input all options.", Toast.LENGTH_LONG).show();
+            }
 
+    }
+
+    public void attachView(Callback callback) {
+
+    }
+
+    public interface Callback {
+        void saveQuestion(Question question);
+    }
 }
+
+
+
