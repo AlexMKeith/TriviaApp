@@ -47,12 +47,13 @@ public class MainActivity extends AppCompatActivity implements QuestionCreatorFr
             AlertDialog.Builder deleteDialog = new AlertDialog.Builder(this);
             deleteDialog.setMessage(R.string.delete_dialog_message);
             deleteDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-//                    dialog.
+                public void onClick(DialogInterface dialog, int which) {
+                    questionList.clear();
+                    dialog.dismiss();
                 }
             });
             deleteDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
+                public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }
             });
