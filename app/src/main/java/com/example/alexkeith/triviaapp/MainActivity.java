@@ -1,6 +1,8 @@
 package com.example.alexkeith.triviaapp;
 
+import android.content.DialogInterface;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -40,9 +42,22 @@ public class MainActivity extends AppCompatActivity implements QuestionCreatorFr
     @OnClick(R.id.delete_quiz_button)
     protected void deleteQuizClicked() {
         if (questionList.isEmpty()) {
-            Toast.makeText(this, "Need to add questions first.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "There is no quiz to delete.", Toast.LENGTH_SHORT).show();
         } else {
-            
+            AlertDialog.Builder deleteDialog = new AlertDialog.Builder(this);
+            deleteDialog.setMessage(R.string.delete_dialog_message);
+            deleteDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+//                    dialog.
+                }
+            });
+            deleteDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = deleteDialog.create();
+            dialog.show();
         }
     }
 
@@ -56,21 +71,39 @@ public class MainActivity extends AppCompatActivity implements QuestionCreatorFr
 
     @OnClick(R.id.take_quiz_button)
     protected void takeQuizClicked() {
-        quizFragment = QuizFragment.newInstance();
-        quizFragment.attachView(this);
         if (questionList.isEmpty()) {
             Toast.makeText(this, "Need to add questions first.", Toast.LENGTH_SHORT).show();
         } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, quizFragment).commit();
+            quizFragment = QuizFragment.newInstance();
+            quizFragment.attachView(this);
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList(QUESTIONS_LIST, (ArrayList<? extends Parcelable>) questionList);
             quizFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, quizFragment).commit();
+
         }
     }
 
     @Override
     public void quizFinished(int correctAnswers) {
 
+        getSupportFragmentManager().beginTransaction().remove(quizFragment).commit();
+        AlertDialog.Builder correctDialog = new AlertDialog.Builder(this);
+        correctDialog.setMessage(getString(R.string.correct_questions, correctAnswers));
+        correctDialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        correctDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = correctDialog.create();
+        dialog.show();
     }
 //    @OnClick(R.id.save_button)
 //    protected void saveButtonClicked(View view) {

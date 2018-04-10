@@ -1,6 +1,7 @@
 package com.example.alexkeith.triviaapp;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+//import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -63,11 +64,12 @@ public class QuizFragment extends Fragment {
         super.onStart();
         questionsList = new ArrayList<>();
         questionsList = getArguments().getParcelableArrayList(QUESTIONS_LIST);
+        populateQuizContent();
     }
 
     private void populateQuizContent () {
         question = questionsList.get(questionListPosition);
-        quizQuestion.setText(question.getQuestion());
+        quizQuestion.setText(question.getTitle());
         List<Button> buttonList = new ArrayList<>();
         buttonList.add(answer_1_button);
         buttonList.add(answer_2_button);
@@ -108,6 +110,7 @@ public class QuizFragment extends Fragment {
     }
 
     private void checkAnswer(String answer) {
+        disableAnswerButtons();
         questionListPosition++;
         if (question.getCorrectAnswer().equals(answer)) {
             quizQuestion.setText("Correct!");
@@ -119,12 +122,27 @@ public class QuizFragment extends Fragment {
 
     @OnClick(R.id.submit_button)
     protected void submitButtonClicked() {
+        enableAnswerButtons();
         if (questionListPosition <= questionsList.size() - 1) {
             populateQuizContent();
         } else {
             quizCallback.quizFinished(correctAnswers);
         }
 
+    }
+
+    private void disableAnswerButtons() {
+        answer_1_button.setEnabled(false);
+        answer_2_button.setEnabled(false);
+        answer_3_button.setEnabled(false);
+        answer_4_button.setEnabled(false);
+    }
+
+    private void enableAnswerButtons() {
+        answer_1_button.setEnabled(true);
+        answer_2_button.setEnabled(true);
+        answer_3_button.setEnabled(true);
+        answer_4_button.setEnabled(true);
     }
 
     public void attachView(QuizCallback quizCallback) {

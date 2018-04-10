@@ -23,6 +23,8 @@ import butterknife.OnClick;
  */
 public class QuestionCreatorFragment extends Fragment {
 
+    private Callback callback;
+
 
     // TODO: Rename and change types and number of parameters
     public static QuestionCreatorFragment newInstance() {
@@ -53,21 +55,23 @@ public class QuestionCreatorFragment extends Fragment {
     }
 
     @OnClick(R.id.save_button)
-    protected void saveClicked() {
-        String questionTitle = questionInput.getText().toString();
-        String correct = correctAnswer.getText().toString();
-        String firstWrong = firstWrongAnswer.getText().toString();
-        String secondWrong = secondWrongAnswer.getText().toString();
-        String thirdWrong = thirdWrongAnswer.getText().toString();
-        Question question = new Question(questionTitle, correct, firstWrong, secondWrong, thirdWrong);
+    protected void saveQuestionClicked() {
         if (questionInput.getText().toString().isEmpty() || correctAnswer.getText().toString().isEmpty() || firstWrongAnswer.getText().toString().isEmpty() || secondWrongAnswer.getText().toString().isEmpty() || thirdWrongAnswer.getText().toString().isEmpty()) {
         Toast.makeText(getActivity(), "Please input all options.", Toast.LENGTH_LONG).show();
-            }
+            } else {
+            String questionTitle = questionInput.getText().toString();
+            String correct = correctAnswer.getText().toString();
+            String firstWrong = firstWrongAnswer.getText().toString();
+            String secondWrong = secondWrongAnswer.getText().toString();
+            String thirdWrong = thirdWrongAnswer.getText().toString();
+            Question question = new Question(questionTitle, correct, firstWrong, secondWrong, thirdWrong);
+            callback.saveQuestion(question);
+        }
 
     }
 
     public void attachView(Callback callback) {
-
+        this.callback = callback;
     }
 
     public interface Callback {
